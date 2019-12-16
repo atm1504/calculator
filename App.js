@@ -26,6 +26,9 @@ class App extends Component {
     } else if (text === 'CLR') {
       this.setState({resultText:'', result:''});
     } else {
+      if ((operations.indexOf(text) !== -1) && (this.state.resultText === '')) {
+        return;
+      }
       this.setState( {resultText:this.state.resultText + text});
 
     }
@@ -50,7 +53,6 @@ class App extends Component {
       rows.push(<View style={styles.row}>{row}</View>);
     }
 
-    let operations = ['CLR','DEL','+', '-', '*', '/'];
     let ops = [];
     for (let j = 0; j < 6; j++) {
       ops.push(
@@ -79,6 +81,7 @@ class App extends Component {
   }
 }
 
+const operations = ['CLR','DEL','+', '-', '*', '/'];
 
 /* Style sheet for the calculator*/
 const styles = StyleSheet.create({
