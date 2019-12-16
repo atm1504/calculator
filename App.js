@@ -26,7 +26,8 @@ class App extends Component {
     } else if (text === 'CLR') {
       this.setState({resultText:'', result:''});
     } else {
-      if ((operations.indexOf(text) !== -1) && (this.state.resultText === '')) {
+      const lastChar = this.state.resultText.split('').pop();
+      if ((operations.indexOf(text) !== -1) && (this.state.resultText === '' || operations.indexOf(lastChar) !== -1)) {
         return;
       }
       this.setState( {resultText:this.state.resultText + text});
