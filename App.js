@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
@@ -12,8 +13,13 @@ class App extends Component {
 
   // Function to calculate the result of the entered expression
   calculateResult() {
+    const lastChar = this.state.resultText.split('').pop();
+    if (operations.indexOf(lastChar) >= 0) {
+      return;
+    }
     const text = this.state.resultText;
-    this.setState({ result: text });
+    var result = eval(text);
+    this.setState({ result: result });
   }
   // Perform different actions according to the button selected or pressed
   buttonPressed(text) {
