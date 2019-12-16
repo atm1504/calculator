@@ -1,15 +1,48 @@
+/* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {resultText: '', result:''};
+    this.buttonPressed = this.buttonPressed.bind(this);
+    this.calculateResult = this.calculateResult.bind(this);
+  }
+
+  // Function to calculate the result of the entered expression
+  calculateResult() {
+    const text = this.state.resultText;
+    this.setState({ result: text });
+  }
+  // Perform different actions according to the button selected or pressed
+  buttonPressed(text) {
+    if (text === '=') {
+      this.calculateResult();
+    } else if (text === 'DEL') {
+      let t = this.state.resultText.split('');
+      t.pop();
+      this.setState({ resultText: t.join('') });
+    } else if (text === 'CLR') {
+      this.setState({resultText:'', result:''});
+    } else {
+      this.setState( {resultText:this.state.resultText + text});
+
+    }
+  }
   render() {
+    /* Looping of the items to show numbers and operators */
     let rows = [];
     let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], ['.', 0, '=']];
     for (let i = 0; i < 4; i++) {
       let row = [];
       for (let j = 0; j < 3; j++) {
         row.push(
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => {
+              this.buttonPressed(nums[i][j]);
+            }}
+            style={styles.btn}>
             <Text style={styles.btnText}>{nums[i][j]}</Text>
           </TouchableOpacity>,
         );
@@ -17,11 +50,13 @@ class App extends Component {
       rows.push(<View style={styles.row}>{row}</View>);
     }
 
-    let operations = ['+', '-', '*', '/'];
+    let operations = ['CLR','DEL','+', '-', '*', '/'];
     let ops = [];
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < 6; j++) {
       ops.push(
-        <TouchableOpacity style={styles.operationButton}>
+        <TouchableOpacity onPress={() => {
+              this.buttonPressed(operations[j]);
+            }} style={styles.operationButton}>
           <Text style={styles.operationText}>{operations[j]}</Text>
         </TouchableOpacity>,
       );
@@ -30,10 +65,10 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.result}>
-          <Text style={styles.resultText}>11 * 11</Text>
+          <Text style={styles.resultText}>{this.state.resultText}</Text>
         </View>
         <View style={styles.calculation}>
-          <Text style={styles.calculationText}>121</Text>
+          <Text style={styles.calculationText}>{this.state.result}</Text>
         </View>
         <View style={styles.buttons}>
           <View style={styles.numbers}>{rows}</View>
@@ -44,6 +79,8 @@ class App extends Component {
   }
 }
 
+
+/* Style sheet for the calculator*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -55,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   resultText: {
-    fontSize: 24,
+    fontSize: 28,
     color: '#000',
   },
   calculation: {
